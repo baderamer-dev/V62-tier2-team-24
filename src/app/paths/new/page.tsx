@@ -9,13 +9,11 @@ export default function NewPathPage() {
     <main className="mx-auto max-w-3xl px-4 py-16">
       <div className="mb-10 text-center">
         <h1 className="text-4xl font-extrabold tracking-tight">
-          Build Your{" "}
-          <span className="bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent">
-            Learning Path
-          </span>
+          Build Your Learning Path
         </h1>
         <p className="mt-3 text-muted-foreground">
-          Fill in the details below and let our AI craft your personalized roadmap in seconds.
+          Fill in the details below and let our AI craft your personalized
+          roadmap in seconds.
         </p>
       </div>
       <NewPathForm />

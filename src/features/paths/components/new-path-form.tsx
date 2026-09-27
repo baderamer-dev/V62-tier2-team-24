@@ -47,13 +47,23 @@ export function NewPathForm() {
     try {
       const response = await generatePath(values);
       if (response?.id) {
-        sessionStorage.setItem(`learning-path:${response.id}`, JSON.stringify(response));
+        sessionStorage.setItem(
+          `learning-path:${response.id}`,
+          JSON.stringify(response),
+        );
+        localStorage.setItem(
+          `learning-path:${response.id}`,
+          JSON.stringify(response),
+        );
+        localStorage.setItem("last-learning-path-id", response.id);
         router.push(`/paths/${response.id}`);
       }
       setIsGenerating(false);
     } catch (error) {
       console.error("Failed to generate path:", error);
-      setError("Something went wrong while generating your path. Please try again.");
+      setError(
+        "Something went wrong while generating your path. Please try again.",
+      );
       setIsGenerating(false);
     }
   };
@@ -173,7 +183,7 @@ export function NewPathForm() {
 
             <Button
               type="submit"
-              className="w-full border-0 bg-gradient-to-r from-cyan-400 to-violet-500 text-white hover:from-cyan-300 hover:to-violet-400"
+              className="w-full"
               disabled={isGenerating || form.formState.isSubmitting}
             >
               {isGenerating ? "Generating Path..." : "Generate Learning Path"}

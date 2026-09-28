@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ResultsLink } from "@/components/results-link";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -38,9 +37,6 @@ export default function Navbar() {
           </span>
         </Link>
         <nav className="flex items-center gap-4 text-sm">
-          <ResultsLink className="text-muted-foreground hover:text-foreground transition-colors">
-            Results
-          </ResultsLink>
           <Link
             href="/paths/new"
             className="rounded-lg bg-primary px-3 py-1.5 text-primary-foreground hover:bg-primary/80 transition-colors"

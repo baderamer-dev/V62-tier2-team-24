@@ -125,3 +125,8 @@ Meeting agenda templates (in `/docs`):
 - Anatolii Lukianenko (Developer): [GitHub](https://github.com/lukasemperfi)
 - Ayoub Ouachra (Developer): [GitHub](https://github.com/lobisloby)
 - Hadeel ALTalli (Shadow Scrum Master): [GitHub](https://github.com/Hadeel-AL-Talli) / [LinkedIn](https://www.linkedin.com/in/hadeel-tali/)
+
+
+## Website Link
+
+[https://v62-tier2-team-24.vercel.app/](https://v62-tier2-team-24.vercel.app/)

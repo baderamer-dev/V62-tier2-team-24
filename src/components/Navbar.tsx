@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const isAuthPage = pathname === "/login" || pathname === "/signup";
 
   if (pathname === "/") {
     return (
@@ -16,10 +17,19 @@ export default function Navbar() {
               Waypoint
             </span>
             <span className="text-[11px] text-muted-foreground">
-              AI-Powered Learning Path for Professionals
+              AI-Powered Learning Path for{" "}
+              <span className="inline-block animate-wave">Professionals</span>
             </span>
           </Link>
-          <ThemeToggle />
+          <div className="flex items-center gap-4 text-sm">
+            <Link
+              href="/login"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Login
+            </Link>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
     );
@@ -37,20 +47,22 @@ export default function Navbar() {
           </span>
         </Link>
         <nav className="flex items-center gap-4 text-sm">
-          {pathname !== "/login" && pathname !== "/signup" && (
+          {!isAuthPage && (
             <>
               <Link
-                href="/paths/new"
+                href={pathname === "/paths/new" ? "/login" : "/paths/new"}
                 className="rounded-lg bg-primary px-3 py-1.5 text-primary-foreground hover:bg-primary/80 transition-colors"
               >
-                New Path
+                {pathname === "/paths/new" ? "Login" : "New Path"}
               </Link>
-              <Link
-                href="/login"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Login
-              </Link>
+              {pathname !== "/paths/new" && (
+                <Link
+                  href="/login"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Login
+                </Link>
+              )}
             </>
           )}
           <ThemeToggle />

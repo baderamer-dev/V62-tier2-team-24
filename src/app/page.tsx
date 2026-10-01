@@ -64,11 +64,13 @@ export default function Home() {
       </p>
 
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <Link href="/login">
-          <Button size="lg">Generate My Path . Free</Button>
+        <Link href="/login" className="pulse-ring">
+          <Button size="lg" variant="outline" className="min-w-56 font-bold">
+            Get started
+          </Button>
         </Link>
         <Link href="/paths/new">
-          <Button variant="outline" size="lg">
+          <Button variant="outline" size="lg" className="min-w-56">
             Continue as guest
             <ArrowRight />
           </Button>

@@ -22,6 +22,9 @@ function getAdminApp(): App {
       projectId,
       clientEmail,
       // Newlines in env vars are often escaped — unescape them here
+      privateKey: privateKey.replace(/\\n/g, "\n"),
+    }),
+  });
 }
 
 export function getAdminFirestore(): Firestore {

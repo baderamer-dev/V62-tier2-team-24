@@ -39,6 +39,8 @@ export interface LearningPath {
   totalSteps: number;
   steps: LearningPathStep[];
   createdAt: string;
+  /** Anonymous user ID generated client-side and stored in localStorage */
+  userId?: string;
 }
 
 export interface InteractiveLearningPathStep extends LearningPathStep {
@@ -47,6 +49,12 @@ export interface InteractiveLearningPathStep extends LearningPathStep {
 
 export interface InteractiveLearningPath extends Omit<LearningPath, "steps"> {
   steps: InteractiveLearningPathStep[];
+  /**
+   * Map of stepNumber → completed.
+   * Stored as a flat object in Firestore so individual steps can be toggled
+   * without rewriting the whole array.
+   */
+  completedSteps: Record<number, boolean>;
 }
 
 // ── API response ─────────────────────────────────────────────────────────────

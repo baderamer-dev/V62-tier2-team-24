@@ -2,17 +2,37 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { login, AuthError } from "@/features/auth/api";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  function onSubmit(event: React.FormEvent) {
+  async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      await login(email, password);
+      router.push("/dashboard");
+    } catch (err) {
+      if (err instanceof AuthError) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -36,6 +56,7 @@ export default function LoginPage() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               autoComplete="email"
+              disabled={isLoading}
               required
             />
           </div>
@@ -44,16 +65,26 @@ export default function LoginPage() {
             <Input
               id="password"
               type="password"
-              placeholder="********"
+              placeholder="••••••••"
               className="h-11 rounded-full px-4"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               autoComplete="current-password"
+              disabled={isLoading}
               required
             />
           </div>
-          <Button type="submit" className="h-11 w-full rounded-full">
-            Login
+          {error && (
+            <p role="alert" className="text-sm text-destructive">
+              {error}
+            </p>
+          )}
+          <Button
+            type="submit"
+            className="h-11 w-full rounded-full"
+            disabled={isLoading}
+          >
+            {isLoading ? "Signing in…" : "Login"}
           </Button>
         </form>
 

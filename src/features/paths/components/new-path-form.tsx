@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPathSchema, type CreatePathValues } from "../schema";
-import { generatePath } from "../api";
+import { generatePath, savePath } from "../api";
 import { useRouter } from "next/navigation";
 import { SkillLevelField } from "./skill-level-field";
 import { WeeklyHoursField } from "./weekly-hours-field";
@@ -47,15 +47,24 @@ export function NewPathForm() {
     try {
       const response = await generatePath(values);
       if (response?.id) {
+        const pathWithUser = { ...response };
+
+        // Persist to browser storage for immediate offline access
         sessionStorage.setItem(
           `learning-path:${response.id}`,
-          JSON.stringify(response),
+          JSON.stringify(pathWithUser),
         );
         localStorage.setItem(
           `learning-path:${response.id}`,
-          JSON.stringify(response),
+          JSON.stringify(pathWithUser),
         );
         localStorage.setItem("last-learning-path-id", response.id);
+
+        // Persist to Firestore via backend (non-blocking)
+        savePath(pathWithUser).catch((err) =>
+          console.error("[new-path-form] Failed to save path to Firestore:", err),
+        );
+
         router.push(`/paths/${response.id}`);
       }
       setIsGenerating(false);

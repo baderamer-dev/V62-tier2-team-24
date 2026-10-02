@@ -2,23 +2,43 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signup, AuthError } from "@/features/auth/api";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  function onSubmit(event: React.FormEvent) {
+  async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
+
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await signup(username, email, password);
+      router.push("/dashboard");
+    } catch (err) {
+      if (err instanceof AuthError) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -45,6 +65,7 @@ export default function SignupPage() {
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               autoComplete="username"
+              disabled={isLoading}
               required
             />
           </div>
@@ -58,6 +79,7 @@ export default function SignupPage() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               autoComplete="email"
+              disabled={isLoading}
               required
             />
           </div>
@@ -66,12 +88,13 @@ export default function SignupPage() {
             <Input
               id="password"
               type="password"
-              placeholder="********"
+              placeholder="••••••••"
               className="h-11 rounded-full px-4"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               autoComplete="new-password"
               minLength={6}
+              disabled={isLoading}
               required
             />
           </div>
@@ -80,18 +103,27 @@ export default function SignupPage() {
             <Input
               id="confirm-password"
               type="password"
-              placeholder="********"
+              placeholder="••••••••"
               className="h-11 rounded-full px-4"
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               autoComplete="new-password"
               minLength={6}
+              disabled={isLoading}
               required
             />
           </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
-          <Button type="submit" className="h-11 w-full rounded-full">
-            Create account
+          {error && (
+            <p role="alert" className="text-sm text-destructive">
+              {error}
+            </p>
+          )}
+          <Button
+            type="submit"
+            className="h-11 w-full rounded-full"
+            disabled={isLoading}
+          >
+            {isLoading ? "Creating account…" : "Create account"}
           </Button>
         </form>
 

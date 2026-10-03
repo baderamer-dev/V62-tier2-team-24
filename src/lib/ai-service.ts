@@ -5,11 +5,20 @@ import type { LearningPathParams, LearningPath, AIError } from "@/types";
 
 // ── Zod schema for validating the AI response ────────────────────────────────
 
+const resourceSchema = z.object({
+  title: z.string().min(1),
+  url: z.string().url(),
+  type: z.enum(["course", "article", "video", "documentation", "book", "other"]),
+  free: z.boolean(),
+  description: z.string().min(1),
+});
+
 const learningPathStepSchema = z.object({
   stepNumber: z.number().int().positive(),
   title: z.string().min(1),
   description: z.string().min(1),
   estimatedWeeks: z.number().int().positive(),
+  resources: z.array(resourceSchema).min(1),
 });
 
 const learningPathSchema = z.object({
@@ -40,8 +49,26 @@ const geminiResponseSchema: Schema = {
           title: { type: SchemaType.STRING },
           description: { type: SchemaType.STRING },
           estimatedWeeks: { type: SchemaType.INTEGER },
+          resources: {
+            type: SchemaType.ARRAY,
+            items: {
+              type: SchemaType.OBJECT,
+              properties: {
+                title: { type: SchemaType.STRING },
+                url: { type: SchemaType.STRING },
+                type: {
+                  type: SchemaType.STRING,
+                  format: "enum" as const,
+                  enum: ["course", "article", "video", "documentation", "book", "other"],
+                },
+                free: { type: SchemaType.BOOLEAN },
+                description: { type: SchemaType.STRING },
+              },
+              required: ["title", "url", "type", "free", "description"],
+            },
+          },
         },
-        required: ["stepNumber", "title", "description", "estimatedWeeks"],
+        required: ["stepNumber", "title", "description", "estimatedWeeks", "resources"],
       },
     },
   },
@@ -80,7 +107,19 @@ function buildUserMessage(params: LearningPathParams): string {
   lines.push(
     ``,
     `Generate a clear, sequential learning path with 5 to 10 steps.`,
-    `Each step must have a stepNumber, a concise title, a detailed description of what to learn and do, and a realistic estimatedWeeks value.`,
+    `Each step must have:`,
+    `- stepNumber: sequential integer starting at 1`,
+    `- title: a concise step title`,
+    `- description: a detailed description of what to learn and do in this step`,
+    `- estimatedWeeks: a realistic integer number of weeks`,
+    `- resources: an array of 2 to 4 specific, real resources (courses, articles, videos, documentation, or books) relevant to this step.`,
+    `  Each resource must include:`,
+    `  - title: the exact name of the resource`,
+    `  - url: a real, publicly accessible URL`,
+    `  - type: one of "course", "article", "video", "documentation", "book", or "other"`,
+    `  - free: true if the resource is free to access, false if paid`,
+    `  - description: one sentence explaining what this resource covers and why it is useful for this step`,
+    `  Mix free and paid resources where appropriate. Prefer well-known, high-quality sources such as MDN, freeCodeCamp, Coursera, Udemy, official documentation, YouTube, or reputable blogs.`,
     `The goal and skillLevel fields in the response must exactly match the input values provided above.`,
   );
 

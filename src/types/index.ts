@@ -25,11 +25,25 @@ export interface AIError {
   message: string;
 }
 
+export type ResourceType = "course" | "article" | "video" | "documentation" | "book" | "other";
+
+export interface Resource {
+  title: string;
+  url: string;
+  type: ResourceType;
+  /** Whether the resource is free to access */
+  free: boolean;
+  /** Short description of what this resource covers */
+  description: string;
+}
+
 export interface LearningPathStep {
   stepNumber: number;
   title: string;
   description: string;
   estimatedWeeks: number;
+  /** Curated free and paid resources for this step */
+  resources: Resource[];
 }
 
 export interface LearningPath {

@@ -37,7 +37,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-[calc(100dvh-8rem)] items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm rounded-xl border border-border/50 bg-card/50 p-6 shadow-sm backdrop-blur">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -107,7 +107,10 @@ export default function LoginPage() {
 
         <p className="mt-8 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="font-medium text-foreground underline">
+          <Link
+            href="/signup"
+            className="font-medium text-foreground underline"
+          >
             Sign up
           </Link>
         </p>

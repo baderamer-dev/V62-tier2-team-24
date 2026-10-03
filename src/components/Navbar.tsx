@@ -28,16 +28,10 @@ export default function Navbar() {
   // ── Landing page header ────────────────────────────────────────────────────
   if (pathname === "/") {
     return (
-      <header className="bg-background">
+      <header className="sticky top-0 z-50 bg-transparent">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex flex-col leading-tight">
-            <span className="text-base font-semibold tracking-tight">
-              Waypoint
-            </span>
-            <span className="text-[11px] text-muted-foreground">
-              AI-Powered Learning Path for{" "}
-              <span className="inline-block animate-wave">Professionals</span>
-            </span>
+          <Link href="/" className="text-base font-semibold tracking-tight">
+            Learning Path generator
           </Link>
           <div className="flex items-center gap-4 text-sm">
             {user ? (
@@ -59,15 +53,10 @@ export default function Navbar() {
 
   // ── App header ─────────────────────────────────────────────────────────────
   return (
-    <header className="border-b border-border bg-background">
+    <header className="sticky top-0 z-50 border-b border-border/40 bg-transparent">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
-        <Link href="/" className="flex flex-col leading-tight">
-          <span className="text-base font-semibold tracking-tight">
-            Waypoint
-          </span>
-          <span className="text-[11px] text-muted-foreground">
-            AI-Powered Learning Path for Professionals
-          </span>
+        <Link href="/" className="text-base font-semibold tracking-tight">
+          Learning Path generator
         </Link>
 
         <nav className="flex items-center gap-3 text-sm">

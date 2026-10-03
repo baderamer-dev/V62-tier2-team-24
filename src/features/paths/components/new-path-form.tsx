@@ -62,7 +62,10 @@ export function NewPathForm() {
 
         // Persist to Firestore via backend (non-blocking)
         savePath(pathWithUser).catch((err) =>
-          console.error("[new-path-form] Failed to save path to Firestore:", err),
+          console.error(
+            "[new-path-form] Failed to save path to Firestore:",
+            err,
+          ),
         );
 
         router.push(`/paths/${response.id}`);
@@ -78,13 +81,8 @@ export function NewPathForm() {
   };
 
   return (
-    <Card className="relative max-w-2xl mx-auto overflow-hidden border shadow-sm">
+    <Card className="relative mx-auto max-w-2xl overflow-hidden border border-border/50 bg-card/50 shadow-sm backdrop-blur-md">
       {isGenerating ? <GeneratingPathOverlay /> : null}
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">
-          Create Learning Path
-        </CardTitle>
-      </CardHeader>
       <CardContent>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -99,7 +97,10 @@ export function NewPathForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>
+                    <FieldLabel
+                      htmlFor={field.name}
+                      className="text-lg font-semibold"
+                    >
                       Career / Learning Goal{" "}
                       <span className="text-destructive">*</span>
                     </FieldLabel>
@@ -127,7 +128,7 @@ export function NewPathForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>
+                    <FieldLabel className="text-lg font-semibold">
                       Current Skill Level{" "}
                       <span className="text-destructive">*</span>
                     </FieldLabel>
@@ -148,7 +149,10 @@ export function NewPathForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>
+                    <FieldLabel
+                      htmlFor={field.name}
+                      className="text-lg font-semibold"
+                    >
                       Background & Experience
                     </FieldLabel>
                     <FieldDescription>
@@ -174,7 +178,7 @@ export function NewPathForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>
+                    <FieldLabel className="text-lg font-semibold">
                       Available Study Time / Week{" "}
                       <span className="text-destructive">*</span>
                     </FieldLabel>

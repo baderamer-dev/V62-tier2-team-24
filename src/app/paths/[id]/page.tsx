@@ -3,7 +3,15 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Clock3, Plus, Search, Sparkles, CheckCircle2, Circle } from "lucide-react";
+import {
+  CheckCircle2,
+  Circle,
+  Clock3,
+  ExternalLink,
+  Plus,
+  Search,
+  Sparkles,
+} from "lucide-react";
 import type { InteractiveLearningPath } from "@/types";
 import { fetchPath, fetchUserPaths, toggleStep } from "@/features/paths/api";
 
@@ -291,7 +299,8 @@ export default function PathDetailPage() {
                       }`}
                     >
                       <article
-                        className={`w-full max-w-[320px] rounded-2xl border bg-card p-6 text-card-foreground shadow-sm transition-colors ${
+                        tabIndex={0}
+                        className={`group w-full max-w-[320px] rounded-2xl border bg-card p-6 text-card-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                           isCompleted
                             ? "border-emerald-500/30 bg-emerald-500/[.04]"
                             : "border-border"
@@ -339,6 +348,53 @@ export default function PathDetailPage() {
                           {step.estimatedWeeks}{" "}
                           {step.estimatedWeeks === 1 ? "week" : "weeks"}
                         </p>
+                        <p className="mt-4 text-[11px] font-medium text-muted-foreground">
+                          Hover or focus to view resources
+                        </p>
+                        <div className="grid grid-rows-[0fr] transition-[grid-template-rows,opacity] duration-300 group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr] group-hover:opacity-100 group-focus-within:opacity-100 opacity-0">
+                          <div className="overflow-hidden">
+                            <div className="mt-4 border-t border-border pt-4">
+                              <h3 className="text-xs font-semibold uppercase tracking-wide text-foreground">
+                                Recommended resources
+                              </h3>
+                              {step.resources?.length ? (
+                                <ul className="mt-3 space-y-2">
+                                  {step.resources.map((resource) => (
+                                    <li key={`${resource.url}-${resource.title}`}>
+                                      <a
+                                        href={resource.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block rounded-lg border border-border bg-muted/40 p-3 transition-colors hover:border-emerald-500/40 hover:bg-emerald-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                      >
+                                        <span className="flex items-start gap-2">
+                                          <span className="min-w-0 flex-1">
+                                            <span className="block text-xs font-semibold text-foreground">
+                                              {resource.title}
+                                            </span>
+                                            <span className="mt-1 block text-[11px] leading-relaxed text-muted-foreground">
+                                              {resource.description}
+                                            </span>
+                                          </span>
+                                          <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+                                        </span>
+                                        <span className="mt-2 flex gap-2 text-[10px] capitalize text-muted-foreground">
+                                          <span>{resource.type}</span>
+                                          <span aria-hidden="true">·</span>
+                                          <span>{resource.free ? "Free" : "Paid"}</span>
+                                        </span>
+                                      </a>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p className="mt-2 text-xs text-muted-foreground">
+                                  No resources were returned for this step.
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </article>
 
                       {/* Step number node */}

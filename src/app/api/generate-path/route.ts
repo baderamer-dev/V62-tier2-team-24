@@ -29,10 +29,10 @@ export async function POST(request: Request) {
   try {
     const learningPath = await generateLearningPath(params);
 
-    console.log(
-      "[generate-path] LearningPath generated:",
-      JSON.stringify(learningPath, null, 2),
-    );
+    // console.log(
+    //   "[generate-path] LearningPath generated:",
+    //   JSON.stringify(learningPath, null, 2),
+    // );
 
     return NextResponse.json(learningPath, { status: 200 });
   } catch (err) {

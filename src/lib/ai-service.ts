@@ -8,7 +8,14 @@ import type { LearningPathParams, LearningPath, AIError } from "@/types";
 const resourceSchema = z.object({
   title: z.string().min(1),
   url: z.string().url(),
-  type: z.enum(["course", "article", "video", "documentation", "book", "other"]),
+  type: z.enum([
+    "course",
+    "article",
+    "video",
+    "documentation",
+    "book",
+    "other",
+  ]),
   free: z.boolean(),
   description: z.string().min(1),
 });
@@ -59,7 +66,14 @@ const geminiResponseSchema: Schema = {
                 type: {
                   type: SchemaType.STRING,
                   format: "enum" as const,
-                  enum: ["course", "article", "video", "documentation", "book", "other"],
+                  enum: [
+                    "course",
+                    "article",
+                    "video",
+                    "documentation",
+                    "book",
+                    "other",
+                  ],
                 },
                 free: { type: SchemaType.BOOLEAN },
                 description: { type: SchemaType.STRING },
@@ -68,7 +82,13 @@ const geminiResponseSchema: Schema = {
             },
           },
         },
-        required: ["stepNumber", "title", "description", "estimatedWeeks", "resources"],
+        required: [
+          "stepNumber",
+          "title",
+          "description",
+          "estimatedWeeks",
+          "resources",
+        ],
       },
     },
   },

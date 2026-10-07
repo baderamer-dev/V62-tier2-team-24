@@ -127,6 +127,6 @@ Meeting agenda templates (in `/docs`):
 - Hadeel ALTalli (Shadow Scrum Master): [GitHub](https://github.com/Hadeel-AL-Talli) / [LinkedIn](https://www.linkedin.com/in/hadeel-tali/)
 
 
-## Website Link
+## Live App Link
 
 [https://v62-tier2-team-24.vercel.app/](https://v62-tier2-team-24.vercel.app/)

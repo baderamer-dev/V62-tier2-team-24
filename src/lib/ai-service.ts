@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import type { Schema } from "@google/generative-ai";
 import { z } from "zod";
-import type { LearningPathParams, LearningPath, AIError } from "@/types";
+import type { LearningPathParams, LearningPath, LearningPathStep, AIError } from "@/types";
 
 // ── Zod schema for validating the AI response ────────────────────────────────
 
@@ -218,4 +218,130 @@ export async function generateLearningPath(
   };
 
   return learningPath;
+}
+
+// ── Single-step regeneration ──────────────────────────────────────────────────
+
+const geminiSingleStepSchema: Schema = {
+  type: SchemaType.OBJECT,
+  properties: {
+    stepNumber: { type: SchemaType.INTEGER },
+    title: { type: SchemaType.STRING },
+    description: { type: SchemaType.STRING },
+    estimatedWeeks: { type: SchemaType.INTEGER },
+    resources: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          title: { type: SchemaType.STRING },
+          url: { type: SchemaType.STRING },
+          type: {
+            type: SchemaType.STRING,
+            format: "enum" as const,
+            enum: ["course", "article", "video", "documentation", "book", "other"],
+          },
+          free: { type: SchemaType.BOOLEAN },
+          description: { type: SchemaType.STRING },
+        },
+        required: ["title", "url", "type", "free", "description"],
+      },
+    },
+  },
+  required: ["stepNumber", "title", "description", "estimatedWeeks", "resources"],
+};
+
+export interface RegenerateStepParams {
+  /** The learning goal for the overall path */
+  goal: string;
+  skillLevel: "beginner" | "intermediate" | "advanced";
+  /** Total number of steps in the path */
+  totalSteps: number;
+  /** The 1-based position of the step being regenerated */
+  stepNumber: number;
+  /** Titles of all other steps so the AI avoids producing a duplicate */
+  otherStepTitles: string[];
+}
+
+function buildRegenerateStepMessage(params: RegenerateStepParams): string {
+  const { goal, skillLevel, totalSteps, stepNumber, otherStepTitles } = params;
+
+  const lines = [
+    `You are regenerating a single step inside an existing learning path.`,
+    ``,
+    `Overall path context:`,
+    `- Goal: ${goal}`,
+    `- Skill level: ${skillLevel}`,
+    `- Total steps: ${totalSteps}`,
+    ``,
+    `You are regenerating step ${stepNumber} of ${totalSteps}.`,
+    `The other steps in this path are (do NOT duplicate their topics):`,
+    ...otherStepTitles.map((t, i) => {
+      const n = i < stepNumber - 1 ? i + 1 : i + 2; // adjust for the missing slot
+      return `  Step ${n}: ${t}`;
+    }),
+    ``,
+    `Produce a fresh, improved version of step ${stepNumber} that:`,
+    `- Fits logically between the steps before and after it`,
+    `- Does not repeat topics already covered by the other steps listed above`,
+    `- Has the same stepNumber (${stepNumber})`,
+    `- Includes 2 to 4 specific, real resources with real URLs`,
+    `  Each resource must have: title, url, type, free (boolean), and a one-sentence description`,
+    `  Prefer well-known sources: MDN, freeCodeCamp, Coursera, Udemy, official docs, YouTube, reputable blogs`,
+  ];
+
+  return lines.join("\n");
+}
+
+export async function regenerateStep(
+  params: RegenerateStepParams,
+): Promise<LearningPathStep> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new AIServiceError({
+      code: "AI_REQUEST_FAILED",
+      message: "GEMINI_API_KEY is not configured.",
+    });
+  }
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    systemInstruction: buildSystemInstruction(),
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: geminiSingleStepSchema,
+    },
+  });
+
+  let rawText: string;
+  try {
+    const result = await model.generateContent(buildRegenerateStepMessage(params));
+    rawText = result.response.text();
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Unknown error from Gemini API";
+    throw new AIServiceError({ code: "AI_REQUEST_FAILED", message });
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(rawText);
+  } catch {
+    throw new AIServiceError({
+      code: "INVALID_JSON",
+      message: `Gemini returned non-JSON content: ${rawText.slice(0, 200)}`,
+    });
+  }
+
+  const validated = learningPathStepSchema.safeParse(parsed);
+  if (!validated.success) {
+    throw new AIServiceError({
+      code: "INVALID_SCHEMA",
+      message: `AI response did not match expected step schema: ${JSON.stringify(validated.error.flatten())}`,
+    });
+  }
+
+  // Enforce the correct stepNumber regardless of what the model returns
+  return { ...validated.data, stepNumber: params.stepNumber };
 }

@@ -1,5 +1,5 @@
 import type { CreatePathValues } from "./schema";
-import type { GeneratePathResponse, LearningPath, InteractiveLearningPath } from "@/types";
+import type { GeneratePathResponse, LearningPath, LearningPathStep, InteractiveLearningPath } from "@/types";
 import { authHeaders, getToken } from "@/features/auth/api";
 
 export class GeneratePathError extends Error {
@@ -147,4 +147,28 @@ export async function toggleStep(
   }
 
   return { ...data, completedSteps };
+}
+
+// ── Regenerate a single step ──────────────────────────────────────────────────
+// Logged-in only — guests cannot persist regenerated steps.
+// Sends PUT /api/paths/[pathId]/steps/[stepNumber] and returns the new step.
+
+export async function regenerateStep(
+  pathId: string,
+  stepNumber: number,
+): Promise<LearningPathStep> {
+  const response = await fetch(`/api/paths/${pathId}/steps/${stepNumber}`, {
+    method: "PUT",
+    headers: authHeaders(),
+  });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({})) as { error?: string };
+    throw new PathApiError(
+      body.error ?? "Could not regenerate the step.",
+      response.status,
+    );
+  }
+
+  return response.json() as Promise<LearningPathStep>;
 }

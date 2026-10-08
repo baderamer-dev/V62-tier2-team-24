@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LogOut, LayoutDashboard } from "lucide-react";
+import { LogOut, CircleUser } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getStoredUser, logout, type AuthUser } from "@/features/auth/api";
 
@@ -31,7 +31,7 @@ export default function Navbar() {
       <header className="sticky top-0 z-50 bg-transparent">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link href="/" className="text-base font-semibold tracking-tight">
-            Learning Path generator
+            Learning Path Generator
           </Link>
           <div className="flex items-center gap-4 text-sm">
             {user ? (
@@ -56,7 +56,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-border/40 bg-transparent">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
         <Link href="/" className="text-base font-semibold tracking-tight">
-          Learning Path generator
+          Learning Path Generator
         </Link>
 
         <nav className="flex items-center gap-3 text-sm">
@@ -66,12 +66,14 @@ export default function Navbar() {
                 <AuthedControls user={user} onLogout={handleLogout} />
               ) : (
                 <>
-                  <Link
-                    href="/paths/new"
-                    className="rounded-lg bg-primary px-3 py-1.5 text-primary-foreground transition-colors hover:bg-primary/80"
-                  >
-                    New Path
-                  </Link>
+                  {pathname !== "/paths/new" && pathname !== "/dashboard" && (
+                    <Link
+                      href="/paths/new"
+                      className="rounded-lg bg-primary px-3 py-1.5 text-primary-foreground transition-colors hover:bg-primary/80"
+                    >
+                      New Path
+                    </Link>
+                  )}
                   <Link
                     href="/login"
                     className="text-muted-foreground transition-colors hover:text-foreground"
@@ -82,7 +84,7 @@ export default function Navbar() {
               )}
             </>
           )}
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
         </nav>
       </div>
     </header>
@@ -98,25 +100,40 @@ function AuthedControls({
   user: AuthUser;
   onLogout: () => void;
 }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className="flex items-center gap-3">
-      <Link
-        href="/dashboard"
-        className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
-        title="Dashboard"
-      >
-        <LayoutDashboard className="size-4" />
-        <span className="hidden sm:inline">{user.username}</span>
-      </Link>
+    <div className="relative">
       <button
         type="button"
-        onClick={onLogout}
-        className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
-        title="Log out"
+        onClick={() => setOpen((value) => !value)}
+        className="rounded-full p-1.5 text-muted-foreground transition-colors hover:text-foreground"
+        aria-label="Account menu"
+        aria-expanded={open}
       >
-        <LogOut className="size-4" />
-        <span className="hidden sm:inline">Logout</span>
+        <CircleUser className="size-5" />
       </button>
+
+      {open && (
+        <div className="absolute right-0 top-full z-50 mt-2 w-44 rounded-lg border border-border bg-card p-1 shadow-md">
+          <p className="px-3 py-1.5 text-sm font-medium">{user.username}</p>
+          <Link
+            href="/dashboard"
+            className="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            onClick={() => setOpen(false)}
+          >
+            Dashboard
+          </Link>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <LogOut className="size-4" />
+            Logout
+          </button>
+        </div>
+      )}
     </div>
   );
 }

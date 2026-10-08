@@ -128,9 +128,9 @@ export function NetworkBackground() {
             text: "rgba(220, 235, 255, 0.72)",
           }
         : {
-            line: "rgba(15, 23, 42, 0.2)",
-            dot: "rgba(15, 23, 42, 0.55)",
-            text: "rgba(15, 23, 42, 0.72)",
+            line: "rgba(15, 23, 42, 0.06)",
+            dot: "rgba(15, 23, 42, 0.18)",
+            text: "rgba(15, 23, 42, 0.28)",
           };
     }
 
@@ -210,7 +210,7 @@ export function NetworkBackground() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0"
+      className="pointer-events-none fixed inset-0 z-0 [mask-image:radial-gradient(ellipse_58%_42%_at_50%_26%,transparent_0%,transparent_42%,black_78%)]"
     />
   );
 }

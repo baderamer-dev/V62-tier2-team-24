@@ -220,7 +220,6 @@ To receive notifications when a run fails, open the repository **Watch** menu an
 - Yangchen Dema (Scrum Master): [GitHub](https://github.com/dema66) / [LinkedIn](https://www.linkedin.com/in/yangchendema/)
 - Abiola Tijani (Developer): [GitHub](https://github.com/polanty) / [LinkedIn](https://www.linkedin.com/in/abiola-tijani-polanty/)
 - Bader Amer (Developer): [GitHub](https://github.com/baderamer-dev)
-- Anatolii Lukianenko (Developer): [GitHub](https://github.com/lukasemperfi)
 - Ayoub Ouachra (Developer): [GitHub](https://github.com/lobisloby)
 - Hadeel ALTalli (Shadow Scrum Master): [GitHub](https://github.com/Hadeel-AL-Talli) / [LinkedIn](https://www.linkedin.com/in/hadeel-tali/)
 

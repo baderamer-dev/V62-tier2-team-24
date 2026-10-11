@@ -4,7 +4,9 @@ import { extractBearerToken, verifyToken, type JwtPayload } from "@/lib/auth";
 // Next.js expects params to be Promise<Record<string, string>> for dynamic
 // segments and Promise<Record<string, never>> (i.e. empty object) for static routes.
 // Using `Record<string, string>` as the upper bound satisfies both cases.
-export type AuthenticatedHandler<TParams extends Record<string, string> = Record<string, never>> = (
+export type AuthenticatedHandler<
+  TParams extends Record<string, string> = Record<string, never>,
+> = (
   request: Request,
   context: { params: Promise<TParams>; auth: JwtPayload },
 ) => Promise<NextResponse> | NextResponse;
@@ -23,9 +25,9 @@ export type AuthenticatedHandler<TParams extends Record<string, string> = Record
  *     }
  *   );
  */
-export function requireAuth<TParams extends Record<string, string> = Record<string, never>>(
-  handler: AuthenticatedHandler<TParams>,
-) {
+export function requireAuth<
+  TParams extends Record<string, string> = Record<string, never>,
+>(handler: AuthenticatedHandler<TParams>) {
   return async (
     request: Request,
     context: { params: Promise<TParams> },

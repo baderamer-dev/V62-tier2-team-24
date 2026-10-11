@@ -7,10 +7,16 @@ import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login, AuthError } from "@/features/auth/api";
+import { login, AuthError, getStoredUser } from "@/features/auth/api";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
+  useEffect(() => {
+    if (getStoredUser()) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);

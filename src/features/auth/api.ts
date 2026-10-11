@@ -39,11 +39,19 @@ export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
 }
 
+let cachedRaw: string | null = null;
+let cachedUser: AuthUser | null = null;
+
 export function getStoredUser(): AuthUser | null {
   try {
     const raw = localStorage.getItem(USER_KEY);
-    return raw ? (JSON.parse(raw) as AuthUser) : null;
+    if (raw === cachedRaw) return cachedUser;
+    cachedRaw = raw;
+    cachedUser = raw ? (JSON.parse(raw) as AuthUser) : null;
+    return cachedUser;
   } catch {
+    cachedRaw = null;
+    cachedUser = null;
     return null;
   }
 }
@@ -75,7 +83,7 @@ export async function signup(
     body: JSON.stringify({ username, email, password }),
   });
 
-  const data = await response.json() as {
+  const data = (await response.json()) as {
     token?: string;
     user?: AuthUser;
     error?: string;
@@ -105,7 +113,7 @@ export async function login(
     body: JSON.stringify({ email, password }),
   });
 
-  const data = await response.json() as {
+  const data = (await response.json()) as {
     token?: string;
     user?: AuthUser;
     error?: string;
@@ -134,7 +142,11 @@ export async function getMe(): Promise<AuthUser> {
   });
 
   if (!response.ok) {
-    throw new AuthError("Session expired. Please log in again.", "UNAUTHORIZED", response.status);
+    throw new AuthError(
+      "Session expired. Please log in again.",
+      "UNAUTHORIZED",
+      response.status,
+    );
   }
 
   return response.json() as Promise<AuthUser>;

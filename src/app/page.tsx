@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { HomeCtas } from "./home-ctas";
 import {
   BarChart3,
   Database,
@@ -44,55 +44,46 @@ const features = [
 
 export default function Home() {
   return (
-    <div className="mx-auto flex max-w-5xl flex-col items-center px-6 py-20 text-center">
-      <h1 className="max-w-3xl text-4xl font-extrabold tracking-tight sm:text-6xl">
-        Your learning path
-        <br />
-        Build for you
-      </h1>
+    <div className="relative">
+      <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-6 py-20 text-center">
+        <h1 className="max-w-3xl text-4xl font-extrabold tracking-tight sm:text-6xl">
+          Your learning path
+          <br />
+          Build for you
+        </h1>
 
-      <p className="mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
-        Stop guessing what to learn next. Our AI analyzes your goals, current
-        skills, and available time to generate a precise, step-by-step learning
-        path tailored exclusively for you.
-      </p>
+        <p className="mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
+          Stop guessing what to learn next. Our AI analyzes your goals, current
+          skills, and available time to generate a precise, step-by-step
+          learning path tailored exclusively for you.
+        </p>
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <Link href="/login" className="pulse-ring">
-          <Button size="lg" variant="outline" className="min-w-56 font-bold">
-            Get started
-          </Button>
-        </Link>
-        <Link href="/paths/new">
-          <Button variant="outline" size="lg" className="min-w-56">
-            Continue as guest
-          </Button>
-        </Link>
+        <HomeCtas />
+
+        <section className="mt-24 w-full text-center">
+          <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            Everything you need to level up
+          </h2>
+
+          <div className="mt-10 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={feature.title}
+                  className="rounded-xl border border-border/50 bg-card/50 p-5 backdrop-blur"
+                >
+                  <Icon className="size-5 text-primary" />
+                  <h3 className="mt-4 font-semibold">{feature.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {feature.text}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
       </div>
-
-      <section className="mt-24 w-full text-center">
-        <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-          Everything you need to level up
-        </h2>
-
-        <div className="mt-10 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => {
-            const Icon = feature.icon;
-            return (
-              <div
-                key={feature.title}
-                className="rounded-xl border border-border/50 bg-card/50 p-5 backdrop-blur"
-              >
-                <Icon className="size-5 text-primary" />
-                <h3 className="mt-4 font-semibold">{feature.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {feature.text}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
     </div>
   );
 }

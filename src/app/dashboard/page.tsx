@@ -33,13 +33,15 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-5xl px-6 py-12">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold">My learning paths</h1>
+            <h1 className="text-xl font-semibold tracking-tight">
+              My Learning Paths
+            </h1>
             <p className="mt-1 text-sm text-muted-foreground">
               All your generated roadmaps in one place.
             </p>
           </div>
           {!loading && !error && paths.length > 0 && (
-            <Link href="/paths/new">
+            <Link href="/paths/new" className="hidden sm:block">
               <Button className="h-9">
                 <Plus /> New path
               </Button>
@@ -83,10 +85,10 @@ export default function DashboardPage() {
                     className="group rounded-2xl border border-border/50 bg-card/50 p-5 shadow-sm backdrop-blur transition hover:border-border hover:bg-card/70"
                   >
                     <div className="flex flex-wrap items-start gap-2">
-                      <span className="rounded-full border border-border bg-muted/60 px-2.5 py-0.5 text-[11px] font-medium">
+                      <span className="rounded-full border border-border bg-muted/60 px-2.5 py-0.5 text-xs font-medium">
                         {path.goal}
                       </span>
-                      <span className="rounded-full border border-border px-2.5 py-0.5 text-[11px] capitalize text-muted-foreground">
+                      <span className="rounded-full border border-border px-2.5 py-0.5 text-xs capitalize text-muted-foreground">
                         {path.skillLevel}
                       </span>
                     </div>
@@ -117,6 +119,13 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
+        {!loading && !error && paths.length > 0 && (
+          <Link href="/paths/new" className="mt-8 block sm:hidden">
+            <Button className="h-11 w-full">
+              <Plus /> New path
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );

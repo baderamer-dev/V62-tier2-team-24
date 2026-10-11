@@ -156,3 +156,41 @@
   pointer-events: none;
 }
 
+/* try some animation here */
+@keyframes landing-path-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes landing-dot-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    r: 5;
+  }
+  50% {
+    opacity: 0.7;
+    r: 6.5;
+  }
+}
+
+.landing-path {
+  stroke-dasharray: 1800;
+  stroke-dashoffset: 1800;
+  animation: landing-path-draw 7s ease-out forwards;
+}
+
+.landing-dot {
+  animation: landing-dot-pulse 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-path,
+  .landing-dot {
+    animation: none;
+  }
+  .landing-path {
+    stroke-dashoffset: 0;
+  }
+}

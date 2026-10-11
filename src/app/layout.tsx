@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeSync } from "@/components/theme-sync";
-
+import { StarryOnPages } from "@/components/starry-on-pages";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
@@ -22,6 +22,7 @@ export default function RootLayout({
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className="min-h-screen flex flex-col">
         <ThemeSync />
+        <StarryOnPages />
         <Navbar />
         <main className="relative z-10 flex-1">{children}</main>
         <Footer />

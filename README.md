@@ -27,7 +27,7 @@ Users describe a career goal and their current skill level, and the app uses Goo
 | Firebase client | Firebase JS SDK v12 |
 | Package manager | npm |
 | CI | GitHub Actions (`npm test` on PRs and pushes to `main`) |
-| Deployment | Netlify (via `@netlify/plugin-nextjs`) |
+| Deployment | Vercel |
 
 ## Prerequisites
 

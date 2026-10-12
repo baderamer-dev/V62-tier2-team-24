@@ -24,6 +24,8 @@ export default function Navbar() {
   }
 
   const isAuthPage = pathname === "/login" || pathname === "/signup";
+  const isPathResultPage =
+    pathname.startsWith("/paths/") && pathname !== "/paths/new";
 
   const dashboardLink = (
     <Link
@@ -41,7 +43,7 @@ export default function Navbar() {
   // ── Landing page header ────────────────────────────────────────────────────
   if (pathname === "/") {
     return (
-      <header className="sticky top-0 z-50 bg-transparent">
+      <header className="relative z-50 bg-transparent">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link
             href="/"
@@ -72,7 +74,13 @@ export default function Navbar() {
 
   // ── App header ─────────────────────────────────────────────────────────────
   return (
-    <header className="sticky top-0 z-50 border-b border-border/40 bg-transparent">
+    <header
+      className={`z-50 border-b border-border/40 ${
+        isPathResultPage
+          ? "sticky top-0 bg-black text-white"
+          : "relative bg-transparent"
+      }`}
+    >
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
         <Link
           href="/"

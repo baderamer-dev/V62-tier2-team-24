@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import type { MouseEvent } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -12,6 +13,7 @@ import {
   RefreshCw,
   Search,
   Sparkles,
+  X,
 } from "lucide-react";
 import type { InteractiveLearningPath, InteractiveLearningPathStep } from "@/types";
 import {
@@ -29,6 +31,7 @@ export default function PathDetailPage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [pathSearch, setPathSearch] = useState("");
   // Track which steps are currently being toggled to prevent double-clicks
   const [togglingSteps, setTogglingSteps] = useState<Set<number>>(new Set());
   // Track which steps are being regenerated
@@ -214,33 +217,67 @@ export default function PathDetailPage() {
 
   // ── Sidebar paths list ─────────────────────────────────────────────────────
   // Show all fetched paths; fall back to just the current path for guests.
-  const sidebarPaths =
-    allPaths.length > 0
-      ? allPaths
-      : [path];
+  const sidebarPaths = allPaths.length > 0 ? allPaths : [path];
+  const query = pathSearch.trim().toLocaleLowerCase();
+  const filteredSidebarPaths = query
+    ? sidebarPaths.filter((sidebarPath) => {
+        const searchableText = [
+          sidebarPath.goal,
+          sidebarPath.skillLevel,
+          ...sidebarPath.steps.flatMap((step) => [step.title, step.description]),
+        ]
+          .join(" ")
+          .toLocaleLowerCase();
+
+        return searchableText.includes(query);
+      })
+    : sidebarPaths;
+
+  const handleActivePathClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    document.getElementById("roadmap")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   return (
     <div className="relative z-10 min-h-screen bg-background font-sans text-foreground transition-colors">
       <div className="flex min-h-[1100px]">
         {/* ── Sidebar ────────────────────────────────────────────────────── */}
-        <aside className="hidden w-[286px] shrink-0 border-r border-border bg-muted/30 px-3 py-6 transition-colors lg:block">
+        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-[286px] shrink-0 self-start overflow-y-auto border-r border-border bg-muted/30 px-3 py-6 transition-colors lg:block">
           <Link
             href="/paths/new"
             className="flex h-11 items-center justify-center gap-1 rounded-xl border border-emerald-500/35 bg-emerald-500/10 text-sm font-semibold text-emerald-700 dark:text-emerald-400"
           >
             <Plus className="size-4" /> New Path
           </Link>
-          <div className="mt-6 flex h-9 items-center gap-2 rounded-lg border border-border bg-background/60 px-3 text-xs text-muted-foreground">
-            <Search className="size-4" /> Search paths...
-          </div>
-          <div className="mt-2 rounded-lg border border-border bg-background/60 px-3 py-2 text-xs text-muted-foreground">
-            Sort: Recently opened
+          <div className="relative mt-6">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="search"
+              value={pathSearch}
+              onChange={(event) => setPathSearch(event.target.value)}
+              placeholder="Search paths..."
+              aria-label="Search learning paths"
+              className="h-9 w-full rounded-lg border border-border bg-background/60 pl-9 pr-9 text-xs text-foreground outline-none transition focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/15"
+            />
+            {pathSearch && (
+              <button
+                type="button"
+                onClick={() => setPathSearch("")}
+                aria-label="Clear path search"
+                className="absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <X className="size-3.5" />
+              </button>
+            )}
           </div>
           <p className="mb-2 mt-4 text-[10px] font-bold uppercase tracking-[.14em] text-muted-foreground">
             Learning Paths
           </p>
           <div className="space-y-1">
-            {sidebarPaths.map((p) => {
+            {filteredSidebarPaths.map((p) => {
               if (!p) return null;
               const pCompleted = p.completedSteps ?? {};
               const pCompletedCount = Object.values(pCompleted).filter(Boolean).length;
@@ -253,7 +290,8 @@ export default function PathDetailPage() {
               return (
                 <Link
                   key={p.id}
-                  href={`/paths/${p.id}`}
+                  href={`/paths/${p.id}#roadmap`}
+                  onClick={isActive ? handleActivePathClick : undefined}
                   className={`block rounded-xl border px-3 py-3 transition-colors ${
                     isActive
                       ? "border-emerald-500/25 bg-emerald-500/[.08]"
@@ -295,6 +333,11 @@ export default function PathDetailPage() {
                 </Link>
               );
             })}
+            {filteredSidebarPaths.length === 0 && (
+              <p className="rounded-lg border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
+                No learning paths match “{pathSearch.trim()}”.
+              </p>
+            )}
           </div>
         </aside>
 

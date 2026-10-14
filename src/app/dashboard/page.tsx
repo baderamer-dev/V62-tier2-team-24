@@ -30,7 +30,7 @@ export default function DashboardPage() {
 
   return (
     <div className="relative flex-1  overflow-hidden bg-background text-foreground">
-      <div className="dashboard-wash" aria-hidden="true">
+      <div className="dashboard-grid" aria-hidden="true">
         <span />
         <span />
         <span />

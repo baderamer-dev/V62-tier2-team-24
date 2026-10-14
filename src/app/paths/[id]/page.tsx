@@ -257,7 +257,7 @@ export default function PathDetailPage() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 top-14 z-20 flex flex-col overflow-hidden bg-background font-sans text-foreground transition-colors">
-      <div className="dashboard-wash" aria-hidden="true">
+      <div className="dashboard-grid" aria-hidden="true">
         <span />
         <span />
         <span />

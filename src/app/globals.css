@@ -229,59 +229,112 @@
 }
 
 
-.dashboard-wash {
+/* The beam offsets are multiples of the 56px grid so the lights run on the lines. */
+.dashboard-grid {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgb(0 0 0 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(0 0 0 / 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 0%, #000 35%, transparent 100%);
 }
 
-.dashboard-wash span {
+.dark .dashboard-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+}
+
+.dashboard-grid span {
   position: absolute;
-  width: 42rem;
-  height: 42rem;
+}
+
+.dashboard-grid span:nth-child(1) {
+  top: -20rem;
+  left: 50%;
+  width: 70rem;
+  height: 36rem;
+  margin-left: -35rem;
   border-radius: 9999px;
-  filter: blur(80px);
-  opacity: 0.16;
-  animation: dashboard-drift 24s ease-in-out infinite;
+  background: radial-gradient(
+    closest-side,
+    rgb(52 211 153 / 0.22),
+    rgb(34 211 238 / 0.08) 60%,
+    transparent
+  );
+  animation: dashboard-glow 10s ease-in-out infinite;
 }
 
-.dark .dashboard-wash span {
-  opacity: 0.26;
+.dashboard-grid span:nth-child(2) {
+  top: 167px;
+  left: 0;
+  width: 14rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+  animation: dashboard-beam-x 9s linear infinite;
 }
 
-.dashboard-wash span:nth-child(1) {
-  top: -18rem;
-  left: -8rem;
-  background: #22d3ee;
+.dashboard-grid span:nth-child(3) {
+  top: 0;
+  left: 335px;
+  width: 1px;
+  height: 12rem;
+  background: linear-gradient(180deg, transparent, #34d399, transparent);
+  animation: dashboard-beam-y 12s linear infinite;
+  animation-delay: -5s;
 }
 
-.dashboard-wash span:nth-child(2) {
-  top: -12rem;
-  right: -14rem;
-  background: #8b5cf6;
-  animation-delay: -8s;
-}
-
-.dashboard-wash span:nth-child(3) {
-  bottom: -22rem;
-  left: 28%;
-  background: #34d399;
-  animation-delay: -16s;
-}
-
-@keyframes dashboard-drift {
+@keyframes dashboard-glow {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.75;
+    transform: scale(1);
   }
   50% {
-    transform: translate3d(1.5rem, 1rem, 0) scale(1.05);
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes dashboard-beam-x {
+  0% {
+    transform: translateX(-14rem);
+    opacity: 0;
+  }
+  10%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
+}
+
+@keyframes dashboard-beam-y {
+  0% {
+    transform: translateY(-12rem);
+    opacity: 0;
+  }
+  10%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(48rem);
+    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dashboard-wash span {
+  .dashboard-grid span {
     animation: none;
+  }
+  .dashboard-grid span:nth-child(2),
+  .dashboard-grid span:nth-child(3) {
+    display: none;
   }
 }

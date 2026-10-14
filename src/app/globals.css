@@ -194,3 +194,94 @@
     stroke-dashoffset: 0;
   }
 }
+
+@keyframes info-wave {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+}
+
+.info-wave {
+  position: relative;
+}
+
+.info-wave::before,
+.info-wave::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1.5px solid currentColor;
+  animation: info-wave 3.2s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  pointer-events: none;
+}
+
+.info-wave::before {
+  animation-delay: 1.6s;
+}
+
+
+.dashboard-wash {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.dashboard-wash span {
+  position: absolute;
+  width: 42rem;
+  height: 42rem;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.16;
+  animation: dashboard-drift 24s ease-in-out infinite;
+}
+
+.dark .dashboard-wash span {
+  opacity: 0.26;
+}
+
+.dashboard-wash span:nth-child(1) {
+  top: -18rem;
+  left: -8rem;
+  background: #22d3ee;
+}
+
+.dashboard-wash span:nth-child(2) {
+  top: -12rem;
+  right: -14rem;
+  background: #8b5cf6;
+  animation-delay: -8s;
+}
+
+.dashboard-wash span:nth-child(3) {
+  bottom: -22rem;
+  left: 28%;
+  background: #34d399;
+  animation-delay: -16s;
+}
+
+@keyframes dashboard-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.5rem, 1rem, 0) scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-wash span {
+    animation: none;
+  }
+}

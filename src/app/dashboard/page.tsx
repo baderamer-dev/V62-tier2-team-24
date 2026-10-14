@@ -29,8 +29,13 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="bg-background text-foreground">
-      <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="relative flex-1  overflow-hidden bg-background text-foreground">
+      <div className="dashboard-wash" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-12">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h1 className="text-xl font-semibold tracking-tight">

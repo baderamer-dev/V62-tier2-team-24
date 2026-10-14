@@ -43,3 +43,5 @@ next-env.d.ts
 
 src/app/nav-preview/
 src/app/dashboard-preview/
+local-mockups/
+src/app/result-preview/

@@ -24,7 +24,9 @@ export default function RootLayout({
         <ThemeSync />
         <StarryOnPages />
         <Navbar />
-        <main className="relative z-10 flex-1">{children}</main>
+        <main className="relative z-10 flex flex-1 flex-col">
+          {children}
+        </main>{" "}
         <Footer />
       </body>
     </html>

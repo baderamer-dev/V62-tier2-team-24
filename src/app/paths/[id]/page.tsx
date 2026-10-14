@@ -274,7 +274,7 @@ export default function PathDetailPage() {
           <div className="relative mt-6">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
-              type="search"
+              type="text"
               value={pathSearch}
               onChange={(event) => setPathSearch(event.target.value)}
               placeholder="Search paths..."
@@ -388,8 +388,8 @@ export default function PathDetailPage() {
           {/* Header */}
           <section className="border-b border-border px-5 pb-5 pt-6 md:px-8">
             <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <div className="flex flex-wrap gap-2">
+              <div className="w-full">
+                <div className="flex w-full flex-wrap items-center gap-2">
                   <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-700 dark:text-emerald-400">
                     {path.goal}
                   </span>

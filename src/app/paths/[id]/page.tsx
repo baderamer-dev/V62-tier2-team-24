@@ -437,203 +437,213 @@ export default function PathDetailPage() {
           </section>
 
           {/* Roadmap */}
-          <section className="flex min-h-0 w-full flex-1 flex-col items-center overflow-y-auto px-5 pb-20 pt-16 md:px-8">
-            <div className="relative w-full">
-              <div className="absolute bottom-0 left-5 top-0 w-px bg-border md:left-1/2" />
-              <div className="relative space-y-16 md:space-y-28">
-                {steps.map((step, index) => {
-                  const isCompleted = !!completedSteps[step.stepNumber];
-                  const isToggling = togglingSteps.has(step.stepNumber);
-                  const isRegenerating = regeneratingSteps.has(step.stepNumber);
+          <section className="min-h-0 w-full flex-1 overflow-y-auto">
+            <div className="mx-auto flex w-full max-w-[780px] flex-col items-center px-5 pb-20 pt-16 md:px-8">
+              <div className="relative w-full">
+                <div className="absolute bottom-0 left-5 top-0 w-px bg-border md:left-1/2" />
+                <div className="relative space-y-16 md:space-y-28">
+                  {steps.map((step, index) => {
+                    const isCompleted = !!completedSteps[step.stepNumber];
+                    const isToggling = togglingSteps.has(step.stepNumber);
+                    const isRegenerating = regeneratingSteps.has(
+                      step.stepNumber,
+                    );
 
-                  return (
-                    <div
-                      key={step.stepNumber}
-                      className={`relative flex pl-16 md:pl-0 ${
-                        index % 2
-                          ? "md:justify-end md:pl-[52%]"
-                          : "md:justify-start md:pr-[52%]"
-                      }`}
-                    >
-                      <article
-                        tabIndex={0}
-                        className={`group relative w-full max-w-[320px] rounded-2xl border bg-card p-6 text-card-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                          isRegenerating
-                            ? "border-violet-500/30"
-                            : isCompleted
-                              ? "border-emerald-500/30 bg-emerald-500/[.04]"
-                              : "border-border"
+                    return (
+                      <div
+                        key={step.stepNumber}
+                        className={`relative flex pl-16 md:pl-0 ${
+                          index % 2
+                            ? "md:justify-end md:pl-[52%]"
+                            : "md:justify-start md:pr-[52%]"
                         }`}
                       >
-                        {/* ── Regenerating skeleton overlay ── */}
-                        {isRegenerating ? (
-                          <div className="flex flex-col gap-3">
-                            <div className="flex items-center justify-between">
-                              <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
-                                Step {step.stepNumber}
-                              </span>
-                              <span className="flex items-center gap-1.5 text-[11px] text-violet-500 dark:text-violet-400">
-                                <RefreshCw className="size-3 animate-spin" />
-                                Regenerating…
-                              </span>
-                            </div>
-                            {/* Animated skeleton bars */}
-                            <div className="mt-2 space-y-2">
-                              <div className="h-4 w-3/4 animate-pulse rounded-md bg-muted" />
-                              <div className="h-3 w-full animate-pulse rounded-md bg-muted" />
-                              <div className="h-3 w-5/6 animate-pulse rounded-md bg-muted" />
-                              <div className="h-3 w-4/6 animate-pulse rounded-md bg-muted" />
-                            </div>
-                            <div className="mt-3 space-y-2">
-                              <div className="h-2 w-1/3 animate-pulse rounded-md bg-muted" />
-                              <div className="h-12 w-full animate-pulse rounded-lg bg-muted" />
-                              <div className="h-12 w-full animate-pulse rounded-lg bg-muted" />
-                            </div>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="flex items-center gap-3">
-                              <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
-                                Step {step.stepNumber}
-                              </span>
-                              {/* Regenerate button — logged-in users only */}
-                              {isLoggedIn && (
-                                <button
-                                  type="button"
-                                  aria-label={`Regenerate step ${step.stepNumber}`}
-                                  disabled={isToggling || isRegenerating}
-                                  onClick={() =>
-                                    handleRegenerateStep(step.stepNumber)
-                                  }
-                                  className="rounded-full p-1 text-muted-foreground/50 transition-colors hover:bg-muted hover:text-violet-500 disabled:opacity-40"
-                                >
-                                  <RefreshCw className="size-3.5" />
-                                </button>
-                              )}
-                              {/* Toggle button */}
-                              <button
-                                type="button"
-                                aria-label={
-                                  isCompleted
-                                    ? `Mark step ${step.stepNumber} as incomplete`
-                                    : `Mark step ${step.stepNumber} as complete`
-                                }
-                                disabled={isToggling}
-                                onClick={() =>
-                                  handleToggleStep(step.stepNumber, isCompleted)
-                                }
-                                className="ml-auto grid size-6 place-items-center rounded-full transition-opacity disabled:opacity-40"
-                              >
-                                {isCompleted ? (
-                                  <CheckCircle2 className="size-5 text-emerald-500" />
-                                ) : (
-                                  <Circle className="size-5 text-muted-foreground/50" />
-                                )}
-                              </button>
-                            </div>
-                            <h2
-                              className={`mt-4 text-base font-bold transition-colors ${
-                                isCompleted
-                                  ? "text-muted-foreground line-through"
-                                  : "text-foreground"
-                              }`}
-                            >
-                              {step.title}
-                            </h2>
-                            <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
-                              {step.description}
-                            </p>
-                            <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
-                              <Clock3 className="size-3.5" /> Est:{" "}
-                              {step.estimatedWeeks}{" "}
-                              {step.estimatedWeeks === 1 ? "week" : "weeks"}
-                            </p>
-                            <p className="mt-4 text-[11px] font-medium text-muted-foreground">
-                              Hover or focus to view resources
-                            </p>
-                            <div className="grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity] duration-300 group-hover:grid-rows-[1fr] group-hover:opacity-100 group-focus-within:grid-rows-[1fr] group-focus-within:opacity-100">
-                              <div className="overflow-hidden">
-                                <div className="mt-4 border-t border-border pt-4">
-                                  <h3 className="text-xs font-semibold uppercase tracking-wide text-foreground">
-                                    Recommended resources
-                                  </h3>
-                                  {step.resources?.length ? (
-                                    <ul className="mt-3 space-y-2">
-                                      {step.resources.map((resource) => (
-                                        <li
-                                          key={`${resource.url}-${resource.title}`}
-                                        >
-                                          <a
-                                            href={resource.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="block rounded-lg border border-border bg-muted/40 p-3 transition-colors hover:border-emerald-500/40 hover:bg-emerald-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                          >
-                                            <span className="flex items-start gap-2">
-                                              <span className="min-w-0 flex-1">
-                                                <span className="block text-xs font-semibold text-foreground">
-                                                  {resource.title}
-                                                </span>
-                                                <span className="mt-1 block text-[11px] leading-relaxed text-muted-foreground">
-                                                  {resource.description}
-                                                </span>
-                                              </span>
-                                              <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
-                                            </span>
-                                            <span className="mt-2 flex gap-2 text-[10px] capitalize text-muted-foreground">
-                                              <span>{resource.type}</span>
-                                              <span aria-hidden="true">·</span>
-                                              <span>
-                                                {resource.free
-                                                  ? "Free"
-                                                  : "Paid"}
-                                              </span>
-                                            </span>
-                                          </a>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  ) : (
-                                    <p className="mt-2 text-xs text-muted-foreground">
-                                      No resources were returned for this step.
-                                    </p>
-                                  )}
-                                </div>
+                        <article
+                          tabIndex={0}
+                          className={`group relative w-full max-w-[320px] rounded-2xl border bg-card p-6 text-card-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                            isRegenerating
+                              ? "border-violet-500/30"
+                              : isCompleted
+                                ? "border-emerald-500/30 bg-emerald-500/[.04]"
+                                : "border-border"
+                          }`}
+                        >
+                          {/* ── Regenerating skeleton overlay ── */}
+                          {isRegenerating ? (
+                            <div className="flex flex-col gap-3">
+                              <div className="flex items-center justify-between">
+                                <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                                  Step {step.stepNumber}
+                                </span>
+                                <span className="flex items-center gap-1.5 text-[11px] text-violet-500 dark:text-violet-400">
+                                  <RefreshCw className="size-3 animate-spin" />
+                                  Regenerating…
+                                </span>
+                              </div>
+                              {/* Animated skeleton bars */}
+                              <div className="mt-2 space-y-2">
+                                <div className="h-4 w-3/4 animate-pulse rounded-md bg-muted" />
+                                <div className="h-3 w-full animate-pulse rounded-md bg-muted" />
+                                <div className="h-3 w-5/6 animate-pulse rounded-md bg-muted" />
+                                <div className="h-3 w-4/6 animate-pulse rounded-md bg-muted" />
+                              </div>
+                              <div className="mt-3 space-y-2">
+                                <div className="h-2 w-1/3 animate-pulse rounded-md bg-muted" />
+                                <div className="h-12 w-full animate-pulse rounded-lg bg-muted" />
+                                <div className="h-12 w-full animate-pulse rounded-lg bg-muted" />
                               </div>
                             </div>
-                          </>
-                        )}
-                      </article>
+                          ) : (
+                            <>
+                              <div className="flex items-center gap-3">
+                                <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                                  Step {step.stepNumber}
+                                </span>
+                                {/* Regenerate button — logged-in users only */}
+                                {isLoggedIn && (
+                                  <button
+                                    type="button"
+                                    aria-label={`Regenerate step ${step.stepNumber}`}
+                                    disabled={isToggling || isRegenerating}
+                                    onClick={() =>
+                                      handleRegenerateStep(step.stepNumber)
+                                    }
+                                    className="rounded-full p-1 text-muted-foreground/50 transition-colors hover:bg-muted hover:text-violet-500 disabled:opacity-40"
+                                  >
+                                    <RefreshCw className="size-3.5" />
+                                  </button>
+                                )}
+                                {/* Toggle button */}
+                                <button
+                                  type="button"
+                                  aria-label={
+                                    isCompleted
+                                      ? `Mark step ${step.stepNumber} as incomplete`
+                                      : `Mark step ${step.stepNumber} as complete`
+                                  }
+                                  disabled={isToggling}
+                                  onClick={() =>
+                                    handleToggleStep(
+                                      step.stepNumber,
+                                      isCompleted,
+                                    )
+                                  }
+                                  className="ml-auto grid size-6 place-items-center rounded-full transition-opacity disabled:opacity-40"
+                                >
+                                  {isCompleted ? (
+                                    <CheckCircle2 className="size-5 text-emerald-500" />
+                                  ) : (
+                                    <Circle className="size-5 text-muted-foreground/50" />
+                                  )}
+                                </button>
+                              </div>
+                              <h2
+                                className={`mt-4 text-base font-bold transition-colors ${
+                                  isCompleted
+                                    ? "text-muted-foreground line-through"
+                                    : "text-foreground"
+                                }`}
+                              >
+                                {step.title}
+                              </h2>
+                              <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
+                                {step.description}
+                              </p>
+                              <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+                                <Clock3 className="size-3.5" /> Est:{" "}
+                                {step.estimatedWeeks}{" "}
+                                {step.estimatedWeeks === 1 ? "week" : "weeks"}
+                              </p>
+                              <p className="mt-4 text-[11px] font-medium text-muted-foreground">
+                                Hover or focus to view resources
+                              </p>
+                              <div className="grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity] duration-300 group-hover:grid-rows-[1fr] group-hover:opacity-100 group-focus-within:grid-rows-[1fr] group-focus-within:opacity-100">
+                                <div className="overflow-hidden">
+                                  <div className="mt-4 border-t border-border pt-4">
+                                    <h3 className="text-xs font-semibold uppercase tracking-wide text-foreground">
+                                      Recommended resources
+                                    </h3>
+                                    {step.resources?.length ? (
+                                      <ul className="mt-3 space-y-2">
+                                        {step.resources.map((resource) => (
+                                          <li
+                                            key={`${resource.url}-${resource.title}`}
+                                          >
+                                            <a
+                                              href={resource.url}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="block rounded-lg border border-border bg-muted/40 p-3 transition-colors hover:border-emerald-500/40 hover:bg-emerald-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                            >
+                                              <span className="flex items-start gap-2">
+                                                <span className="min-w-0 flex-1">
+                                                  <span className="block text-xs font-semibold text-foreground">
+                                                    {resource.title}
+                                                  </span>
+                                                  <span className="mt-1 block text-[11px] leading-relaxed text-muted-foreground">
+                                                    {resource.description}
+                                                  </span>
+                                                </span>
+                                                <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+                                              </span>
+                                              <span className="mt-2 flex gap-2 text-[10px] capitalize text-muted-foreground">
+                                                <span>{resource.type}</span>
+                                                <span aria-hidden="true">
+                                                  ·
+                                                </span>
+                                                <span>
+                                                  {resource.free
+                                                    ? "Free"
+                                                    : "Paid"}
+                                                </span>
+                                              </span>
+                                            </a>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    ) : (
+                                      <p className="mt-2 text-xs text-muted-foreground">
+                                        No resources were returned for this
+                                        step.
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </article>
 
-                      {/* Step number node */}
-                      <span
-                        className={`absolute left-0 top-6 z-10 grid size-10 place-items-center rounded-full border-2 font-semibold transition-colors md:left-1/2 md:-translate-x-1/2 ${
-                          isRegenerating
-                            ? "border-violet-500 bg-violet-500/10 text-violet-600 dark:text-violet-400"
-                            : isCompleted
-                              ? "border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                              : "border-border bg-background text-muted-foreground"
-                        }`}
-                      >
-                        {isRegenerating ? (
-                          <RefreshCw className="size-4 animate-spin" />
-                        ) : (
-                          step.stepNumber
+                        {/* Step number node */}
+                        <span
+                          className={`absolute left-0 top-6 z-10 grid size-10 place-items-center rounded-full border-2 font-semibold transition-colors md:left-1/2 md:-translate-x-1/2 ${
+                            isRegenerating
+                              ? "border-violet-500 bg-violet-500/10 text-violet-600 dark:text-violet-400"
+                              : isCompleted
+                                ? "border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                                : "border-border bg-background text-muted-foreground"
+                          }`}
+                        >
+                          {isRegenerating ? (
+                            <RefreshCw className="size-4 animate-spin" />
+                          ) : (
+                            step.stepNumber
+                          )}
+                        </span>
+                        {index === 0 && (
+                          <TourHint
+                            id={3}
+                            step={tour.step}
+                            text="Hover a step to open its links."
+                            isLast={tour.isLast}
+                            onAdvance={tour.advance}
+                            className="left-16 top-full mt-3 md:left-0"
+                          />
                         )}
-                      </span>
-                      {index === 0 && (
-                        <TourHint
-                          id={3}
-                          step={tour.step}
-                          text="Hover a step to open its links."
-                          isLast={tour.isLast}
-                          onAdvance={tour.advance}
-                          className="left-16 top-full mt-3 md:left-0"
-                        />
-                      )}
-                    </div>
-                  );
-                })}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </section>

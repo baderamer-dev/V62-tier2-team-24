@@ -262,9 +262,9 @@ export default function PathDetailPage() {
         <span />
         <span />
       </div>
-      <div className="relative z-10 flex min-h-[1100px] flex-1">
+      <div className="relative z-10 flex min-h-0 flex-1 overflow-hidden">
         {/* ── Sidebar ────────────────────────────────────────────────────── */}
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-[286px] shrink-0 self-start overflow-y-auto border-r border-border bg-muted/30 px-3 py-6 transition-colors lg:block">
+        <aside className="hidden h-full w-[286px] shrink-0 overflow-hidden border-r border-border bg-muted/30 px-3 py-6 transition-colors lg:block">
           <Link
             href="/paths/new"
             className="flex h-11 items-center justify-center gap-1 rounded-xl border border-emerald-500/35 bg-emerald-500/10 text-sm font-semibold text-emerald-700 dark:text-emerald-400"
@@ -384,9 +384,12 @@ export default function PathDetailPage() {
         </aside>
 
         {/* ── Main ───────────────────────────────────────────────────────── */}
-        <main className="min-w-0 flex-1" id="roadmap">
+        <main
+          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden"
+          id="roadmap"
+        >
           {/* Header */}
-          <section className="border-b border-border px-5 pb-5 pt-6 md:px-8">
+          <section className="shrink-0 border-b border-border px-5 pb-5 pt-6 md:px-8">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="w-full">
                 <div className="flex w-full flex-wrap items-center gap-2">
@@ -434,7 +437,7 @@ export default function PathDetailPage() {
           </section>
 
           {/* Roadmap */}
-          <section className="mx-auto flex max-w-[780px] flex-col items-center px-5 pb-20 pt-16 md:px-8">
+          <section className="flex min-h-0 w-full flex-1 flex-col items-center overflow-y-auto px-5 pb-20 pt-16 md:px-8">
             <div className="relative w-full">
               <div className="absolute bottom-0 left-5 top-0 w-px bg-border md:left-1/2" />
               <div className="relative space-y-16 md:space-y-28">

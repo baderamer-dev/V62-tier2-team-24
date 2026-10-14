@@ -256,7 +256,7 @@ export default function PathDetailPage() {
   };
 
   return (
-    <div className="relative z-10 flex flex-1 flex-col overflow-hidden bg-background font-sans text-foreground transition-colors">
+    <div className="fixed inset-x-0 bottom-0 top-14 z-20 flex flex-col overflow-hidden bg-background font-sans text-foreground transition-colors">
       <div className="dashboard-wash" aria-hidden="true">
         <span />
         <span />
@@ -264,7 +264,7 @@ export default function PathDetailPage() {
       </div>
       <div className="relative z-10 flex min-h-0 flex-1 overflow-hidden">
         {/* ── Sidebar ────────────────────────────────────────────────────── */}
-        <aside className="hidden h-full w-[286px] shrink-0 overflow-hidden border-r border-border bg-muted/30 px-3 py-6 transition-colors lg:block">
+        <aside className="hidden h-full w-[286px] shrink-0 overflow-y-auto border-r border-border bg-muted/30 px-3 py-6 transition-colors lg:block">
           <Link
             href="/paths/new"
             className="flex h-11 items-center justify-center gap-1 rounded-xl border border-emerald-500/35 bg-emerald-500/10 text-sm font-semibold text-emerald-700 dark:text-emerald-400"

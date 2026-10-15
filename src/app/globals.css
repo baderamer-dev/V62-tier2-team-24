@@ -194,3 +194,147 @@
     stroke-dashoffset: 0;
   }
 }
+
+@keyframes info-wave {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+}
+
+.info-wave {
+  position: relative;
+}
+
+.info-wave::before,
+.info-wave::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1.5px solid currentColor;
+  animation: info-wave 3.2s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  pointer-events: none;
+}
+
+.info-wave::before {
+  animation-delay: 1.6s;
+}
+
+
+/* The beam offsets are multiples of the 56px grid so the lights run on the lines. */
+.dashboard-grid {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgb(0 0 0 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(0 0 0 / 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 0%, #000 35%, transparent 100%);
+}
+
+.dark .dashboard-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+}
+
+.dashboard-grid span {
+  position: absolute;
+}
+
+.dashboard-grid span:nth-child(1) {
+  top: -20rem;
+  left: 50%;
+  width: 70rem;
+  height: 36rem;
+  margin-left: -35rem;
+  border-radius: 9999px;
+  background: radial-gradient(
+    closest-side,
+    rgb(52 211 153 / 0.22),
+    rgb(34 211 238 / 0.08) 60%,
+    transparent
+  );
+  animation: dashboard-glow 10s ease-in-out infinite;
+}
+
+.dashboard-grid span:nth-child(2) {
+  top: 167px;
+  left: 0;
+  width: 14rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+  animation: dashboard-beam-x 9s linear infinite;
+}
+
+.dashboard-grid span:nth-child(3) {
+  top: 0;
+  left: 335px;
+  width: 1px;
+  height: 12rem;
+  background: linear-gradient(180deg, transparent, #34d399, transparent);
+  animation: dashboard-beam-y 12s linear infinite;
+  animation-delay: -5s;
+}
+
+@keyframes dashboard-glow {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes dashboard-beam-x {
+  0% {
+    transform: translateX(-14rem);
+    opacity: 0;
+  }
+  10%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
+}
+
+@keyframes dashboard-beam-y {
+  0% {
+    transform: translateY(-12rem);
+    opacity: 0;
+  }
+  10%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(48rem);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-grid span {
+    animation: none;
+  }
+  .dashboard-grid span:nth-child(2),
+  .dashboard-grid span:nth-child(3) {
+    display: none;
+  }
+}
